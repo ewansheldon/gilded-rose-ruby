@@ -4,51 +4,55 @@ class GildedRose
     @items = items
   end
 
-  def update_quality()
-    @items.each do |item|
-      if item.name != "Aged Brie" and item.name != "Backstage passes to a TAFKAL80ETC concert"
-        if item.quality > 0
-          if item.name != "Sulfuras, Hand of Ragnaros"
-            item.quality -= 1
-          end
-        end
-      else
-        if item.quality < 50
-          item.quality += 1
-          if item.name == "Backstage passes to a TAFKAL80ETC concert"
-            if item.sell_in < 11
-              if item.quality < 50
-                item.quality += 1
-              end
-            end
-            if item.sell_in < 6
-              if item.quality < 50
-                item.quality += 1
-              end
-            end
-          end
-        end
-      end
-      if item.name != "Sulfuras, Hand of Ragnaros"
-        item.sell_in -= 1
-      end
-      if item.sell_in < 0
-        if item.name != "Aged Brie"
-          if item.name != "Backstage passes to a TAFKAL80ETC concert"
-            if item.quality > 0
-              if item.name != "Sulfuras, Hand of Ragnaros"
-                item.quality -= 1
-              end
-            end
-          else
-            item.quality = item.quality - item.quality
-          end
-        else
-          if item.quality < 50
-            item.quality += 1
-          end
-        end
-      end
+  def update_quality
+    @items.each {|item|
+    identify(item)}
+  end
+
+  private
+
+  def identify(item)
+    case item.name
+    when "Aged Brie"
+      update_brie(item)
+    when "Backstage passes to a TAFKAL80ETC concert"
+      update_pass(item)
+    when "Sulfuras, Hand of Ragnaros"
+      update_sulfuras(item)
+    else
+      update_standard(item)
     end
   end
+
+  def update_brie(item)
+    item.quality += 1 if item.quality < 50
+    decrease_sell_in(item)
+  end
+
+  def update_pass(item)
+    item.quality += 1 if item.sell_in <= 5
+    item.quality += 1 if item.sell_in <= 10
+    item.quality += 1
+    item.quality = 0 if item.sell_in <= 0
+    decrease_sell_in(item)
+  end
+
+  def update_sulfuras(item)
+
+  end
+
+  def update_standard(item)
+    item.sell_in > 0 ? item.quality -= 1 : item.quality -= 2
+    decrease_sell_in(item)
+    reset_to_zero(item)
+  end
+
+  def decrease_sell_in(item)
+    item.sell_in -= 1
+  end
+
+  def reset_to_zero(item)
+    item.quality = 0 if item.quality < 0
+  end
+
 end

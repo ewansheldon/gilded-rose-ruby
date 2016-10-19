@@ -56,7 +56,9 @@ describe GildedRose do
     end
 
     it 'increases backstage pass quality by three within 5 days' do
-      6.times {gilded_rose.update_quality}
+      5.times {gilded_rose.update_quality}
+      expect(pass.quality).to eq 20
+      gilded_rose.update_quality
       expect(pass.quality).to eq 23
     end
 
