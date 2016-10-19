@@ -18,7 +18,7 @@ class GildedRose
     when "Backstage passes to a TAFKAL80ETC concert"
       update_pass(item)
     when "Sulfuras, Hand of Ragnaros"
-      update_sulfuras(item)
+      
     else
       update_standard(item)
     end
@@ -35,10 +35,6 @@ class GildedRose
     item.quality += 1
     item.quality = 0 if item.sell_in <= 0
     decrease_sell_in(item)
-  end
-
-  def update_sulfuras(item)
-
   end
 
   def update_standard(item)
